@@ -12,6 +12,13 @@ describe('Payment Service', () => {
   });
 
   test('should successfully process a valid payment', () => {
+    const paymentDetails: PaymentDetails = {amount: 20,currency: 'dinar',method: PaymentMethod.CreditCard,cardNumber:'513' };
+    const mockProcessPaymentResponse = {status: 'success',transactionId:'kk66' };
+  
+    paymentAdapterMock.processPayment.mockReturnValue(mockProcessPaymentResponse);
+    const result = paymentService.makePayment(paymentDetails);
+    expect(result).toBe('Payment successful. Transaction ID: kk66');
+    expect(paymentAdapterMock.processPayment).toHaveBeenCalledWith(paymentDetails);
     // Arrange
     //TODO: Create paymentDetails object initialized with fake data
     //TODO: Create mockProcessPaymentResponse object containing success status and a fake transactiondId
@@ -24,6 +31,10 @@ describe('Payment Service', () => {
   });
 
   test('should throw an error for payment failure', () => {
+    const paymentDetails: PaymentDetails = {amount: 202,currency: 'dinar',method:PaymentMethod.CreditCard,cardNumber:'123'};
+    const mockProcessPaymentResponse = { status: 'failure' };
+    paymentAdapterMock.processPayment.mockReturnValue(mockProcessPaymentResponse);
+    expect(() => paymentService.makePayment(paymentDetails)).toThrow('Payment failed');
     // Arrange
     //TODO: Create paymentDetails object initialized with fake data
     //TODO: Create mockProcessPaymentResponse object containing failure status
@@ -33,6 +44,10 @@ describe('Payment Service', () => {
   });
 
   test('should throw an error for invalid payment amount', () => {
+    const paymentDetails: PaymentDetails = { amount: -30,currency: 'dinar',method: PaymentMethod.CreditCard,cardNumber: '123',
+    };
+    expect(() => paymentService.makePayment(paymentDetails)).toThrow('Invalid payment amount');
+  
     // Arrange
     //TODO: Create paymentDetails object initialized with fake data where amount should be negative or undefined
     // Act & Assert

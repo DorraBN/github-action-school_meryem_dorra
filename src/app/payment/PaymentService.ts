@@ -2,6 +2,9 @@ import { PaymentAdapter } from './PaymentAdapter';
 import { PaymentDetails } from './PaymentDetails';
 
 export class PaymentService {
+  static processPayment() {
+    throw new Error('Method not implemented.');
+  }
   private paymentAdapter: PaymentAdapter;
 
   constructor(paymentProcessor: PaymentAdapter) {
